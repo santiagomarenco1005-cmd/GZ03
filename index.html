@@ -289,6 +289,16 @@
         .weather-dot {
             animation: pulse-ring 2s infinite cubic-bezier(0.2, 0, 0.2, 1);
         }
+
+        /* Efecto relieve para secciones de info */
+        .card-frame {
+            border: none !important;
+            box-shadow:
+                -6px -6px 14px rgba(255, 255, 255, 0.95),
+                6px 6px 18px rgba(92, 64, 51, 0.45),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+                inset -2px -2px 5px rgba(92, 64, 51, 0.25) !important;
+        }
     </style>
 </head>
 
@@ -378,7 +388,7 @@
 
     <!-- Imagen Principal Destacada (Con Marco Premium) -->
     <section class="max-w-5xl mx-auto px-4 md:px-8 mb-24 w-full animate-float relative z-10">
-        <div class="premium-frame group">
+        <div class="premium-frame group card-frame">
             <div class="inner-gold-border overflow-hidden relative">
                 <div
                     class="absolute inset-0 bg-wood-700 mix-blend-multiply opacity-0 group-hover:opacity-20 transition-opacity duration-700 z-10">
@@ -410,7 +420,7 @@
 
             <!-- Sala de Estar -->
             <div
-                class="bg-white elegant-shadow p-8 border border-wood-100 card-hover-fx vintage-corners group flex flex-col items-center cursor-default">
+                class="bg-white p-8 border-0 card-hover-fx vintage-corners group flex flex-col items-center cursor-default card-frame">
                 <div
                     class="w-20 h-20 bg-wood-50 rounded-full flex items-center justify-center text-wood-500 mb-6 group-hover:bg-wood-900 group-hover:text-wood-50 group-hover:shadow-xl transition-all duration-500 relative z-10">
                     <i class="fas fa-couch text-3xl group-hover:scale-110 transition-transform duration-500"></i>
@@ -427,7 +437,7 @@
 
             <!-- Cocina Integral -->
             <div
-                class="bg-white elegant-shadow p-8 border border-wood-100 card-hover-fx vintage-corners group flex flex-col items-center cursor-default">
+                class="bg-white p-8 border-0 card-hover-fx vintage-corners group flex flex-col items-center cursor-default card-frame">
                 <div
                     class="w-20 h-20 bg-wood-50 rounded-full flex items-center justify-center text-wood-500 mb-6 group-hover:bg-wood-900 group-hover:text-wood-50 group-hover:shadow-xl transition-all duration-500 relative z-10">
                     <i class="fas fa-utensils text-3xl group-hover:scale-110 transition-transform duration-500"></i>
@@ -444,7 +454,7 @@
 
             <!-- Escaleras / Loft -->
             <div
-                class="bg-white elegant-shadow p-8 border border-wood-100 card-hover-fx vintage-corners group flex flex-col items-center cursor-default">
+                class="bg-white p-8 border-0 card-hover-fx vintage-corners group flex flex-col items-center cursor-default card-frame">
                 <div
                     class="w-20 h-20 bg-wood-50 rounded-full flex items-center justify-center text-wood-500 mb-6 group-hover:bg-wood-900 group-hover:text-wood-50 group-hover:shadow-xl transition-all duration-500 relative z-10">
                     <i class="fas fa-stairs text-3xl group-hover:scale-110 transition-transform duration-500"></i>
@@ -466,7 +476,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
             <!-- Conectividad -->
-            <div class="wood-gradient p-8 rounded-sm elegant-shadow relative overflow-hidden">
+            <div class="wood-gradient p-8 rounded-sm elegant-shadow relative card-frame overflow-hidden">
+                
                 <div class="absolute -right-4 -top-4 text-wood-300 opacity-30 text-6xl">
                     <i class="fas fa-wifi"></i>
                 </div>
@@ -507,7 +518,8 @@
             </script>
 
             <!-- Estancia -->
-            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100">
+            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100 card-frame">
+                
                 <h3 class="font-serif text-2xl text-wood-900 mb-6 border-b border-wood-200 pb-2">Su Estancia</h3>
                 <ul class="space-y-6">
                     <li class="flex items-start gap-4">
@@ -543,7 +555,8 @@
             </div>
 
             <!-- Entretenimiento y Confort -->
-            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100">
+            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100 card-frame">
+                
                 <h3 class="font-serif text-2xl text-wood-900 mb-6 border-b border-wood-200 pb-2">Tecnología y Confort
                 </h3>
                 <ul class="space-y-6">
@@ -575,7 +588,8 @@
             </div>
 
             <!-- Reglas y Movilidad -->
-            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100">
+            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100 card-frame">
+                
                 <h3 class="font-serif text-2xl text-wood-900 mb-6 border-b border-wood-200 pb-2">Útil y Práctico</h3>
                 <ul class="space-y-6">
                     <li class="flex items-start gap-4">
@@ -606,7 +620,8 @@
             </div>
 
             <!-- Amenidades -->
-            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100 md:col-span-2">
+            <div class="bg-white p-8 rounded-sm elegant-shadow border border-wood-100 md:col-span-2 card-frame">
+                
                 <h3 class="font-serif text-2xl text-wood-900 mb-8 text-center">Amenidades del Edificio</h3>
                 <div class="flex flex-wrap justify-center gap-8 md:gap-12 text-center">
                     <div class="group cursor-default w-28">
@@ -758,8 +773,8 @@
                             alt="Vista aérea del Gran Malecón y el Río Magdalena" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
                     <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2024/10/31162059/eb50b8e0-30c0-48d3-9e0a-ed181a2eb8b4-1024x683.webp"
-                            alt="Zona gastronómica y peatonal del Gran Malecón" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2021/01/11135912/Caiman-del-Rio-1024x683.jpg"
+                            alt="Caimán del Río — restaurante en el Gran Malecón" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
                     <div class="overflow-hidden premium-frame group p-1">
                         <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2025/12/22164520/Luna-del-Rio-2-scaled.webp"
