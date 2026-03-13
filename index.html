@@ -348,8 +348,22 @@
                 class="hover:text-wood-900 transition-colors cursor-pointer border-b border-transparent hover:border-wood-900 pb-1">Guía
                 Local</a>
         </div>
-        <button class="md:hidden text-wood-900"><i class="fas fa-bars text-xl"></i></button>
+        <button id="menu-toggle" class="md:hidden text-wood-900" onclick="toggleMobileMenu()"><i class="fas fa-bars text-xl"></i></button>
     </nav>
+
+    <!-- Menú Mobile -->
+    <div id="mobile-menu" class="hidden fixed top-[68px] left-0 right-0 z-40 glass-nav border-t border-wood-200 py-6 px-8 flex flex-col gap-6 text-sm uppercase tracking-widest text-wood-700 font-medium md:hidden">
+        <a href="#inicio" onclick="toggleMobileMenu()" class="hover:text-wood-900 transition-colors">Inicio</a>
+        <a href="#el-loft" onclick="toggleMobileMenu()" class="hover:text-wood-900 transition-colors">El Loft</a>
+        <a href="#guia-local" onclick="toggleMobileMenu()" class="hover:text-wood-900 transition-colors">Guía Local</a>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
 
     <!-- Header Elegante -->
     <header id="inicio" class="pt-32 pb-10 px-4 text-center relative z-10">
@@ -513,7 +527,7 @@
                             </div>
                             <div class="text-right">
                                 <p class="font-medium text-wood-900">Check-out</p>
-                                <p class="text-sm text-wood-700">11:00 AM</p>
+                                <p class="text-sm text-wood-700">10:00 AM</p>
                             </div>
                         </div>
                     </li>
@@ -738,26 +752,18 @@
                     <div class="w-16 h-[1px] bg-wood-500 mx-auto mb-4"></div>
                     <p class="text-sm text-wood-700 font-light max-w-xl mx-auto">5 km de senderos, gastronomía y brisa del Río Magdalena — el plan imperdible de Barranquilla.</p>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://arquitecturayempresa.es/sites/default/files/content/arquitectura_rehabilitacion_malecon_barranquilla_1.jpg"
-                            alt="Malecón senderos y jardines" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2024/10/31164057/DJI_0691_11zon-1024x576.webp"
+                            alt="Vista aérea del Gran Malecón y el Río Magdalena" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
                     <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://arquitecturayempresa.es/sites/default/files/content/arquitectura_rehabilitacion_malecon_barranquilla_2.jpg"
-                            alt="Malecón frente al río" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2024/10/31162059/eb50b8e0-30c0-48d3-9e0a-ed181a2eb8b4-1024x683.webp"
+                            alt="Zona gastronómica y peatonal del Gran Malecón" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
                     <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://arquitecturayempresa.es/sites/default/files/content/arquitectura_rehabilitacion_malecon_barranquilla_3.jpg"
-                            alt="Malecón arquitectura y espacios" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://arquitecturayempresa.es/sites/default/files/content/arquitectura_rehabilitacion_malecon_barranquilla_6.jpg"
-                            alt="Malecón zona peatonal" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="overflow-hidden premium-frame group p-1">
-                        <img src="https://images.adsttc.com/media/images/5afb/084b/f197/cc04/2500/00ff/large_jpg/Barranquilla.jpg?1526401094"
-                            alt="Gran Malecón vista panorámica ArchDaily" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="https://fastandstatic-offload-granmalecon.s3.amazonaws.com/wp-content/uploads/2025/12/22164520/Luna-del-Rio-2-scaled.webp"
+                            alt="La Luna del Río — rueda panorámica nocturna en el Gran Malecón" class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
                 </div>
             </div>
@@ -842,7 +848,7 @@
                     </button>
                     <div class="faq-answer bg-wood-50 px-6">
                         <p class="py-4 text-sm text-wood-700 border-t border-wood-100">
-                            El apartamento cuenta con calentador a gas. Simplemente abra la llave del agua caliente en
+                            El apartamento cuenta con calentador eléctrico. Simplemente abra la llave del agua caliente en
                             la ducha o lavamanos y espere unos 30 segundos a que la temperatura se regule
                             automáticamente.
                         </p>
