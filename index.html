@@ -299,6 +299,15 @@
                 inset 2px 2px 5px rgba(255, 255, 255, 0.7),
                 inset -2px -2px 5px rgba(92, 64, 51, 0.25) !important;
         }
+
+        /* Lightbox CSS */
+        .lightbox-active {
+            overflow: hidden; /* Evita el scroll de la página principal */
+        }
+
+        .gallery-image-cursor {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -1122,6 +1131,281 @@
                 scrollProgress.style.width = progress + '%';
             });
 
+        });
+    </script>
+    <!-- Lightbox (Visor de Imágenes estilo Gmail) -->
+    <div id="lightbox-overlay" class="fixed inset-0 z-[9999] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+
+        <!-- Controles Superiores -->
+        <div class="absolute top-0 w-full p-4 flex justify-end items-center gap-4 z-[10001] bg-gradient-to-b from-black/50 to-transparent">
+            <!-- Zoom In -->
+            <button id="lightbox-zoom-in" class="text-white/70 hover:text-white transition-colors p-2 focus:outline-none" title="Acercar">
+                <i class="fas fa-search-plus text-xl"></i>
+            </button>
+            <!-- Zoom Out -->
+            <button id="lightbox-zoom-out" class="text-white/70 hover:text-white transition-colors p-2 focus:outline-none" title="Alejar">
+                <i class="fas fa-search-minus text-xl"></i>
+            </button>
+            <!-- Download -->
+            <a id="lightbox-download" href="#" download class="text-white/70 hover:text-white transition-colors p-2 focus:outline-none" title="Descargar">
+                <i class="fas fa-download text-xl"></i>
+            </a>
+            <!-- Close -->
+            <button id="lightbox-close" class="text-white/70 hover:text-white transition-colors p-2 ml-4 focus:outline-none" title="Cerrar (Esc)">
+                <i class="fas fa-times text-3xl"></i>
+            </button>
+        </div>
+
+        <!-- Controles Laterales (Navegación) -->
+        <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white p-4 z-[10001] hidden focus:outline-none">
+            <i class="fas fa-chevron-left text-4xl"></i>
+        </button>
+
+        <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white p-4 z-[10001] hidden focus:outline-none">
+            <i class="fas fa-chevron-right text-4xl"></i>
+        </button>
+
+        <!-- Contenedor de la Imagen -->
+        <div class="relative w-full h-full flex items-center justify-center p-8 overflow-hidden" id="lightbox-image-container">
+            <img id="lightbox-img" src="" alt="Vista previa" class="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing" style="transform: scale(1);">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const lightbox = document.getElementById('lightbox-overlay');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const closeBtn = document.getElementById('lightbox-close');
+            const nextBtn = document.getElementById('lightbox-next');
+            const prevBtn = document.getElementById('lightbox-prev');
+            const zoomInBtn = document.getElementById('lightbox-zoom-in');
+            const zoomOutBtn = document.getElementById('lightbox-zoom-out');
+            const downloadBtn = document.getElementById('lightbox-download');
+            const imageContainer = document.getElementById('lightbox-image-container');
+
+            let currentImages = [];
+            let currentIndex = 0;
+            let currentScale = 1;
+            const ZOOM_STEP = 0.25;
+            const MAX_ZOOM = 3;
+            const MIN_ZOOM = 0.5;
+
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+
+            // Gather all images that should be part of the lightbox
+            // Only select images inside .premium-frame to avoid UI icons/logos if necessary,
+            // but the request implies all images should be viewable. We'll target images inside .premium-frame for galleries.
+            const galleryImages = document.querySelectorAll('.premium-frame img');
+
+            galleryImages.forEach((img, index) => {
+                img.classList.add('gallery-image-cursor');
+                currentImages.push(img.src);
+
+                img.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openLightbox(index);
+                });
+            });
+
+            function openLightbox(index) {
+                if (currentImages.length === 0) return;
+                currentIndex = index;
+                updateImage();
+
+                lightbox.classList.remove('hidden');
+                // trigger reflow
+                void lightbox.offsetWidth;
+                lightbox.classList.remove('opacity-0');
+                lightbox.classList.add('flex');
+
+                document.body.classList.add('lightbox-active');
+
+                updateNavigationButtons();
+            }
+
+            function closeLightbox() {
+                lightbox.classList.add('opacity-0');
+                setTimeout(() => {
+                    lightbox.classList.add('hidden');
+                    lightbox.classList.remove('flex');
+                    document.body.classList.remove('lightbox-active');
+                    resetZoom();
+                }, 300); // match transition duration
+            }
+
+            function updateImage() {
+                resetZoom();
+                lightboxImg.src = currentImages[currentIndex];
+                downloadBtn.href = currentImages[currentIndex];
+
+                // Extract filename for download attribute
+                const urlParts = currentImages[currentIndex].split('/');
+                downloadBtn.download = urlParts[urlParts.length - 1] || 'image.jpg';
+
+                updateNavigationButtons();
+            }
+
+            function updateNavigationButtons() {
+                if (currentImages.length > 1) {
+                    prevBtn.classList.remove('hidden');
+                    nextBtn.classList.remove('hidden');
+                } else {
+                    prevBtn.classList.add('hidden');
+                    nextBtn.classList.add('hidden');
+                }
+            }
+
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                updateImage();
+            }
+
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                updateImage();
+            }
+
+            // Zoom Functions
+            function applyTransform() {
+                lightboxImg.style.transform = `scale(${currentScale}) translate(${translateX}px, ${translateY}px)`;
+            }
+
+            function resetZoom() {
+                currentScale = 1;
+                translateX = 0;
+                translateY = 0;
+                applyTransform();
+                lightboxImg.style.cursor = 'grab';
+            }
+
+            function zoomIn() {
+                if (currentScale < MAX_ZOOM) {
+                    currentScale += ZOOM_STEP;
+                    applyTransform();
+                    lightboxImg.style.cursor = currentScale > 1 ? 'grab' : 'default';
+                }
+            }
+
+            function zoomOut() {
+                if (currentScale > MIN_ZOOM) {
+                    currentScale -= ZOOM_STEP;
+
+                    if (currentScale <= 1) {
+                        currentScale = 1;
+                        translateX = 0;
+                        translateY = 0;
+                    }
+
+                    applyTransform();
+                    lightboxImg.style.cursor = currentScale > 1 ? 'grab' : 'default';
+                }
+            }
+
+            // Event Listeners
+            closeBtn.addEventListener('click', closeLightbox);
+
+            // Close on background click
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox || e.target === imageContainer) {
+                    closeLightbox();
+                }
+            });
+
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                nextImage();
+            });
+
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                prevImage();
+            });
+
+            zoomInBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                zoomIn();
+            });
+
+            zoomOutBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                zoomOut();
+            });
+
+            // Prevent closing when clicking on the image itself unless dragging
+            lightboxImg.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('hidden')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowRight') nextImage();
+                    if (e.key === 'ArrowLeft') prevImage();
+                    if (e.key === '+' || e.key === '=') zoomIn();
+                    if (e.key === '-') zoomOut();
+                }
+            });
+
+            // Mouse wheel zoom
+            imageContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            });
+
+            // Dragging logic for zoomed images
+            lightboxImg.addEventListener('mousedown', (e) => {
+                if (currentScale > 1) {
+                    isDragging = true;
+                    startX = e.clientX - translateX * currentScale;
+                    startY = e.clientY - translateY * currentScale;
+                    lightboxImg.style.cursor = 'grabbing';
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                // Calculate new translation, keeping in mind the scale
+                translateX = (e.clientX - startX) / currentScale;
+                translateY = (e.clientY - startY) / currentScale;
+
+                applyTransform();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                if (currentScale > 1) {
+                    lightboxImg.style.cursor = 'grab';
+                }
+            });
+
+            // Touch support for dragging (basic)
+            lightboxImg.addEventListener('touchstart', (e) => {
+                if (currentScale > 1 && e.touches.length === 1) {
+                    isDragging = true;
+                    startX = e.touches[0].clientX - translateX * currentScale;
+                    startY = e.touches[0].clientY - translateY * currentScale;
+                }
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging || e.touches.length !== 1) return;
+
+                translateX = (e.touches[0].clientX - startX) / currentScale;
+                translateY = (e.touches[0].clientY - startY) / currentScale;
+
+                applyTransform();
+            });
+
+            window.addEventListener('touchend', () => {
+                isDragging = false;
+            });
         });
     </script>
 </body>
